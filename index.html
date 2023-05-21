@@ -29,6 +29,21 @@
         device: device,
         format: canvasFormat,
       });
+
+      // Start accessing the GPU
+      const encoder = device.createCommandEncoder();
+      const pass = encoder.beginRenderPass({
+        colorAttachments: [{
+          view: context.getCurrentTexture().createView(),
+          loadOp: "clear",
+          clearValue: { r: 0.1, g: 0.12, b: 0.1, a: 1},
+          storeOp: "store",
+        }]
+      });
+
+      pass.end();
+      
+      device.queue.submit([encoder.finish()]);
     </script>
 </body>
 </html>
