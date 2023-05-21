@@ -10,6 +10,8 @@
   <canvas width="512" height="512"></canvas>
     <script type="module">
 
+      const vertexShader = await loadShaderFile("./shader.wgsl");
+
       // Setup
       const canvas = document.querySelector("canvas");
 
@@ -60,12 +62,7 @@
 
       const cellShaderModule = device.createShaderModule({
         lagel: "Cell shader",
-        code: /* wgsl */`
-          @vertex
-          fn vertexMain(@location(0) pos: vec2f) -> @builtin(position) vec4f {
-            return vec4f(pos, 0, 1);
-          }
-        `
+        code: vertexShader
       })
 
       // Start accessing the GPU
@@ -82,6 +79,11 @@
       pass.end();
       
       device.queue.submit([encoder.finish()]);
+
+      function loadShaderFile(path) {
+        return fetch(path)
+          .then(response => response.text());
+      }
     </script>
 </body>
 </html>
